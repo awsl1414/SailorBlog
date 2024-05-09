@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "corsheaders",
-    # "users",
+    "user.apps.UserConfig",
 ]
+AUTH_USER_MODEL = "user.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# 配置跨域请求
 CORS_ALLOW_ALL_ORIGINS = True
 
 
@@ -81,6 +83,7 @@ WSGI_APPLICATION = "SailorBlog.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# 配置数据库
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
@@ -117,6 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
+# 配置时区
 TIME_ZONE = "Asia/Shanghai"
 
 USE_I18N = True

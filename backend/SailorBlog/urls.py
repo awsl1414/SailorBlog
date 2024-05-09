@@ -21,7 +21,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-
+# 配置swagger
 schema_view = get_schema_view(
     openapi.Info(
         title="SailorBlog API",
@@ -31,7 +31,11 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=(
+        [
+            permissions.AllowAny,
+        ]
+    ),
 )
 
 urlpatterns = [
@@ -51,5 +55,5 @@ urlpatterns = [
         name="schema-redoc",
     ),
     path("admin/", admin.site.urls),
-    path("users/", include("users.urls")),
+    path("users/", include("user.urls")),
 ]
