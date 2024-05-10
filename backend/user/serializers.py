@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 
-User = get_user_model()
+UserInfo = get_user_model()
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -11,7 +13,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = User
+        model = UserInfo
         fields = (
             "username",
             "email",
@@ -33,7 +35,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop("confirm_password")
-        user = User.objects.create(
+        user = UserInfo.objects.create(
             username=validated_data["username"],
             email=validated_data["email"],
             nickname=validated_data["nickname"],
@@ -41,12 +43,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data["password"])
         user.save()
+        Token.objects.create(user=user)
         return user
 
 
 class AvatarSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserInfo
         fields = ("avatar",)
 
     def save(self, **kwargs):
@@ -54,8 +57,3 @@ class AvatarSerializer(serializers.ModelSerializer):
         user.avatar = self.validated_data["avatar"]
         user.save()
         return user
-
-    def update(self, instance, validated_data):
-        instance.avatar = validated_data["avatar"]
-        instance.save()
-        return instance
