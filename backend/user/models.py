@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 
-class User(AbstractUser):
+class UserInfo(AbstractUser):
     nickname = models.CharField(
         _("nickname"), max_length=150, blank=True, help_text=_("昵称")
     )
@@ -20,6 +20,6 @@ class User(AbstractUser):
         return self.username
 
     class Meta:
-        db_table = "user"
-        verbose_name = _("用户")
-        verbose_name_plural = _("用户")
+        db_table = "UserInfo"
+        verbose_name = _("用户表")
+        verbose_name_plural = _("用户表")

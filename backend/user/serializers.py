@@ -1,52 +1,61 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
-import os
+from rest_framework import serializers
+
 
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    confirm_password = serializers.CharField(write_only=True)
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
 
     class Meta:
         model = User
         fields = (
-            "id",
             "username",
             "email",
             "password",
             "confirm_password",
             "nickname",
-            "avatar",
             "bio",
         )
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
 
     def validate(self, attrs):
-        if attrs["password"] != attrs.pop("confirm_password"):
-            raise ValidationError("两次输入的密码不匹配。")
-
-        # 文件大小验证示例：
-        avatar = attrs.get("avatar")
-        if avatar and avatar.size > 5 * 1024 * 1024:  # 限制大小为5MB
-            raise ValidationError("头像文件大小不能超过5MB。")
-
-        # 文件类型验证示例：
-        if avatar and os.path.splitext(avatar.name)[1] not in [".jpg", ".jpeg", ".png"]:
-            raise ValidationError("不支持的文件类型。")
-
+        password = attrs.get("password")
+        confirm_password = attrs.get("confirm_password")
+        if password != confirm_password:
+            raise serializers.ValidationError("密码不匹配。")
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        validated_data.pop("confirm_password")
+        user = User.objects.create(
             username=validated_data["username"],
             email=validated_data["email"],
-            nickname=validated_data.get("nickname", ""),
-            bio=validated_data.get("bio", ""),
+            nickname=validated_data["nickname"],
+            bio=validated_data["bio"],
         )
         user.set_password(validated_data["password"])
-        user.avatar = validated_data.get("avatar")
         user.save()
-
         return user
+
+
+class AvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("avatar",)
+
+    def save(self, **kwargs):
+        user = self.context["request"].user
+        user.avatar = self.validated_data["avatar"]
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        instance.avatar = validated_data["avatar"]
+        instance.save()
+        return instance
