@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_spectacular",
     "corsheaders",
-    "user.apps.UserConfig",
+    "users.apps.UsersConfig",
+    "posts.apps.PostsConfig",
 ]
 
 REST_FRAMEWORK = {
@@ -107,7 +108,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = "user.UserInfo"
+AUTH_USER_MODEL = "users.UserInfo"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

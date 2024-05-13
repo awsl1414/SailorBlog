@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 from rest_framework import permissions
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -38,5 +38,6 @@ urlpatterns = [
         name="redoc",
     ),
     path("admin/", admin.site.urls),
-    path("user/", include("user.urls")),
+    path("users/", include("users.urls")),
+    path("posts/", include("posts.urls")),
 ]
