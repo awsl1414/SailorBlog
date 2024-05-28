@@ -10,7 +10,7 @@ class CategoryChoices(models.TextChoices):
     LIFESTYLE = "Lifestyle", "生活"
 
     def __str__(self):
-        return self.name
+        return self.label  # 更改为 label，便于显示友好名称
 
 
 class Post(models.Model):
@@ -25,3 +25,20 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_excerpt(self, char_limit=200):
+        """
+        获取文章摘要，默认限制 200 个字符
+        """
+        return (
+            self.body[:char_limit] + "..." if len(self.body) > char_limit else self.body
+        )
+
+    class Meta:
+        db_table = "post"
+        verbose_name = "文章"
+        verbose_name_plural = "文章"
+        indexes = [
+            models.Index(fields=["title"], name="title_idx"),
+            models.Index(fields=["created_at"], name="created_at_idx"),
+        ]

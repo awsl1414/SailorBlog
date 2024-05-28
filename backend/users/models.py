@@ -20,6 +20,11 @@ class UserInfo(AbstractUser):
         return self.username
 
     class Meta:
-        db_table = "UserInfo"
-        verbose_name = _("用户表")
-        verbose_name_plural = _("用户表")
+        db_table = "user_info"  # 表名使用小写和下划线风格，更符合数据库表名的惯例
+        verbose_name = _("用户")
+        verbose_name_plural = _("用户")
+
+        # 添加索引
+        indexes = [
+            models.Index(fields=["username"], name="username_idx"),
+        ]
