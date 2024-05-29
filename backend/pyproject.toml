@@ -1,0 +1,23 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "awsl1414", email = "3030994569@qq.com"},
+]
+dependencies = [
+    "django",
+    "djangorestframework",
+    "djangorestframework-simplejwt",
+    "drf-spectacular",
+    "django-cors-headers",
+    "pillow",
+    "mysqlclient",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
